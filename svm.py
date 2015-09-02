@@ -242,8 +242,6 @@ Y = train_df['Survived'].values
 clf = svm.LinearSVC()
 clf.fit(X,Y)
 
-print ('')
-print ('Writing Kaggle result file in svm.csv.')
 
 print ('')
 print ('Plotting the separating line.')
@@ -253,11 +251,40 @@ xx = np.linspace(0,1)
 yy = a * xx - (clf.intercept_[0]) / w[1]
 plt.plot(xx,yy)
 xlabels = ['Male','Female']
-ylabels = ['1st class','2nd class','3rd class']
-plt.scatter(X[:,0],X[:,1],c=Y)
-plt.xticks([0,1],xlabels,rotation='vertical')
-plt.yticks([1,2,3],ylabels)
-plt.show()
+ylabels = ['1st','2nd','3rd']
+#plt.scatter(X[:,0],X[:,1],s=50)
+dead=plt.scatter([0,0,0],[1,2,3],c='b',s=50,label='Dead')
+alive=plt.scatter([1,1,1],[1,2,3],c='r',s=50,label='Alive')
+plt.legend(handles=[dead,alive])
+plt.xticks([0,1],xlabels,fontsize = 18)
+plt.yticks([1,2,3],ylabels,fontsize = 18)
+plt.ylabel('Class',fontsize=18)
+plt.xlabel('Gender',fontsize=18)
+
+print ('')
+print ('Exporting the figure as GenderClass.eps')
+print ('========================================')
+
+plt.savefig('GenderClass.eps', format='eps', dpi=1000)
+plt.close()
+print ('Done.')
+
+
+print ('')
+print ('Writing Kaggle result file in GenderClass.csv')
+print ('=============================================')
+
+Xtest = test_df[['Gender','Pclass']].values
+Ytest = clf.predict(Xtest)
+
+f=open('GenderClass.csv', 'wb')
+f.write('PassengerId,Survived\n')
+i=892
+for x in Ytest:
+	f.write(str(i)+','+str(x)+'\n')
+	i+=1
+
+print ('Done.')
 
 print ('')
 print ('=======')

@@ -21,9 +21,9 @@
 \begin{abstract}
 Given data on 891 passengers of the Titanic (age, class, sex, ...), the Kaggle tutorial "Titanic: Machine Learning from Disaster" (\url{http://www.kaggle.com}) asks to predict the survival of 418 other passengers. 
 In this note, we present our results using the Support Vector Machine (SVM) algorithm LinearSVC provided by the library sklearn in python. 
-We only take into account three features out of nine, that are the gender, the class and the sex of the passengers.
+After a raw overview on the data, we only take into account two features, that are Gender and Class.
 We show that this algorithm leads to a model where all women survive and all men die, independently on the class.
-This leads to a prediction efficiency of XXX in the Kaggle leaderboard.
+This leads to a prediction efficiency of 0.76555 in the Kaggle leaderboard, which corresponds to the benchmark "Gender based model".
 \end{abstract}
 
 %%%
@@ -174,15 +174,31 @@ Given those first conclusions, we focus on the model that should be the most rel
 
 % 2 - SVM for the Gender/Class model
 \section{SVM for the Gender/Class model}
+	
+Figure~\ref{fig:Gender_Class} shows the result of the LinearSVC algorithm from the library svm of sklearn (\url{http://scikit-learn.org/stable/modules/svm.html}).
+The Python code that generates this figure is available on Github at \url{https://github.com/alexandrecaze/kaggle-titanic} (file svm.py).
+%
+\begin{figure}[h!]
+\begin{center}
+\includegraphics[width=\textwidth]{./GenderClass.eps}
+\caption{\label{fig:Gender_Class} Separating line between survivors and non-survivors according to the SVM model based on the Gender/Class model.}
+\end{center}
+\end{figure}
 
-
-
-
+In Fig.~\ref{fig:Gender_Class}, we have represented the 6 possible cases corresponding to the Gender-Class model (Male and 1st class, Male and 2nd class, ...) and the associated prediction according to the LinearSVC algorithm trained on the training set described in Table~\ref{tab:comparison}. 
+Survivors are represented in red and non-survivors in blue. 
+Note that this problem is not linearly separable, which implies non-trivial calculations in the black-box LinearSVC (for details, see e.g. Ref.~\cite{HastieBook}) in order to find the line that minimises the error, represented in blue.
+As a conclusion, one can see that the best model in that framework ignores the feature Class and only predicts that women survive and men die.
+This leads to a prediction efficiency of 76.555\% in the Kaggle leaderboard, calculated on the test set.
+Although it might sound like a trivial result, it is elegant to obtain a mathematical justification for it (it is a close call for the women of 3rd class to be predicted as survivors, another training set using the same algorithm could have led to a different model).
 
 %% Bibliography
 % ============
-%\begin{thebibliography}{40}
+\begin{thebibliography}{40}
 
-%\end{thebibliography}
+\bibitem{HastieBook}
+T. Hastie, R. Tibshirani and J. Friedman, {\it The Elements of Statistical Learning: Data Mining, Inference, and Prediction, Second Edition} (Springer Series in Statistics).
+
+\end{thebibliography}
 
 \end{document}
